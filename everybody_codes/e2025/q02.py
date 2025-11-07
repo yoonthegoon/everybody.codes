@@ -22,7 +22,10 @@ def div(lhs: Complex, rhs: Complex) -> Complex:
 
 
 def get_xy(notes: str) -> Complex:
-    x, y = map(int, re.match(r"A=\[(?P<x>-?\d+),(?P<y>-?\d+)]", notes).groups())
+    match = re.match(r"A=\[(?P<x>-?\d+),(?P<y>-?\d+)]", notes)
+    if match is None:
+        raise ValueError(f"Invalid notes: {notes}")
+    x, y = map(int, match.groups())
     return x, y
 
 
