@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+echo -e "\033[1mChecking project for type errors\033[0m"
 ty check
+echo "---"
+echo -e "\033[1mRunning formatter\033[0m"
 ruff format
+echo "---"
+echo -e "\033[1mSorting imports\033[0m"
 ruff check --select I --fix
