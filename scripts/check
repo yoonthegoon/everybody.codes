@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+ty check
+ruff format
+ruff check --select I --fix
