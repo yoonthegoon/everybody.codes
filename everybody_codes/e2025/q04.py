@@ -18,7 +18,7 @@ def p2(notes: str) -> int:
 
 def p3(notes: str) -> int:
     gear_pairs_str = notes.split("|")
-    turns = 100
+    turns = 100.0
     for gear_pair_str in gear_pairs_str:
         x, y = map(int, gear_pair_str.split())
         turns *= x / y
