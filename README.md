@@ -8,6 +8,7 @@ to [everybody.codes](https://everybody.codes/home).
 ```shell
 git clone https://github.com/yoonthegoon/everybody.codes.git
 cd everybody.codes
+uv sync  # for dev dependencies
 ```
 
 ## Usage
@@ -37,4 +38,21 @@ python3 -m everybody_codes.e2025.q01
 > Fyrryn
 > Elarzris
 > Drakzyph
+> ```
+
+Format code, imports, and type check.
+
+```shell
+scripts/check
+```
+
+> ```text
+> Checking project for type errors
+> All checks passed!
+> ---
+> Running formatter
+> 8 files left unchanged
+> ---
+> Sorting imports
+> All checks passed!
 > ```
