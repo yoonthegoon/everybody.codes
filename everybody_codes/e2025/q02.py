@@ -1,6 +1,6 @@
 import re
 
-type Complex = tuple[int, int]
+Complex = tuple[int, int]
 
 
 def add(lhs: Complex, rhs: Complex) -> Complex:
