@@ -1,6 +1,3 @@
-from everybody_codes.utils import get_notes
-
-
 def get_names_instructions(notes: str) -> tuple[list[str], list[str]]:
     names_str, instructions_str, *_ = notes.split("\n\n")
     names = names_str.split(",")
@@ -65,6 +62,8 @@ def p3(notes: str) -> str:
 
 
 if __name__ == "__main__":
+    from everybody_codes.utils import get_notes
+
     p1_notes = get_notes(2025, 1, 1)
     p1_answer = p1(p1_notes)
     print(p1_answer)
