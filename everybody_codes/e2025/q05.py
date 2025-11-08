@@ -3,15 +3,29 @@ from typing import Optional
 
 class Segment:
     value: int
-    left: Optional[int]
-    right: Optional[int]
-    next: Optional[Segment]
+    left: Optional[int] = None
+    right: Optional[int] = None
+    next: Optional[Segment] = None
 
     def __init__(self, value: int) -> None:
         self.value = value
-        self.left = None
-        self.right = None
-        self.next = None
+
+    def __repr__(self) -> str:
+        buffer = ""
+        if self.left is not None:
+            buffer += f"{self.left}-"
+        else:
+            buffer += "  "
+        buffer += f"{self.value}"
+        if self.right is not None:
+            buffer += f"-{self.right}"
+        if self.next is not None:
+            buffer += f"\n  |\n{self.next}"
+        return buffer
+
+    def construct(self, numbers: list[int]) -> None:
+        for number in numbers:
+            self._construct(number)
 
     def _construct(self, number: int) -> None:
         if number < self.value and self.left is None:
@@ -23,42 +37,34 @@ class Segment:
         else:
             self.next._construct(number)
 
-    def construct(self, numbers: list[int]) -> None:
-        for number in numbers:
-            self._construct(number)
-
-    @property
-    def quality(self) -> int:
-        if self.next is None:
-            return self.value
-        return int(str(self.value) + str(self.next.quality))
-
     @property
     def number(self) -> int:
-        buff = ""
-        if self.left is not None:
-            buff += str(self.left)
-        buff += str(self.value)
-        if self.right is not None:
-            buff += str(self.right)
-        return int(buff)
+        return int("".join(map(str, filter(None, (self.left, self.value, self.right)))))
+
+    @property
+    def spine(self) -> int:
+        if self.next is None:
+            return self.value
+        return int(str(self.value) + str(self.next.spine))
 
 
 class Sword:
-    def __init__(self, note: str) -> None:
-        identifier_str, numbers_str = note.split(":")
-        identifier = int(identifier_str)
-        numbers = list(map(int, numbers_str.split(",")))
+    identifier: int
+    fishbone: Segment
 
+    def __init__(self, identifier: int, numbers: list[int]) -> None:
         self.identifier = identifier
         self.fishbone = Segment(numbers[0])
         self.fishbone.construct(numbers[1:])
 
+    def __repr__(self) -> str:
+        return f"id: {self.identifier}\n\n{self.fishbone}"
+
     def __lt__(self, other: Sword) -> bool:
         self_segment, other_segment = self.fishbone, other.fishbone
-        if self_segment.quality < other_segment.quality:
+        if self_segment.spine < other_segment.spine:
             return True
-        if self_segment.quality > other_segment.quality:
+        if self_segment.spine > other_segment.spine:
             return False
         while (self_segment is not None) or (other_segment is not None):
             if self_segment.number < other_segment.number:
@@ -69,18 +75,35 @@ class Sword:
         return self.identifier < other.identifier
 
 
+def get_identifiers_numbers(notes: str) -> list[tuple[int, list[int]]]:
+    identifiers_numbers = []
+    for line in notes.split():
+        identifier_str, numbers_str = line.split(":")
+        identifier = int(identifier_str)
+        numbers = list(map(int, numbers_str.split(",")))
+        identifiers_numbers.append((identifier, numbers))
+    return identifiers_numbers
+
+
 def p1(notes: str) -> int:
-    sword = Sword(notes)
-    return sword.fishbone.quality
+    identifier, numbers = get_identifiers_numbers(notes)[0]
+    sword = Sword(identifier, numbers)
+    return sword.fishbone.spine
 
 
 def p2(notes: str) -> int:
-    swords = [Sword(note) for note in notes.split()]
-    return max(swords).fishbone.quality - min(swords).fishbone.quality
+    swords = [
+        Sword(identifier, numbers)
+        for identifier, numbers in get_identifiers_numbers(notes)
+    ]
+    return max(swords).fishbone.spine - min(swords).fishbone.spine
 
 
 def p3(notes: str) -> int:
-    swords = [Sword(note) for note in notes.split()]
+    swords = [
+        Sword(identifier, numbers)
+        for identifier, numbers in get_identifiers_numbers(notes)
+    ]
     checksum = 0
     for i, sword in enumerate(sorted(swords, reverse=True), 1):
         checksum += i * sword.identifier
