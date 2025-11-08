@@ -67,10 +67,8 @@ class Sword:
         while (self_segment is not None) or (other_segment is not None):
             if self_segment.level != other_segment.level:
                 return self_segment.level < other_segment.level
-            self_segment, other_segment = (
-                self_segment.next_segment,
-                other_segment.next_segment,
-            )
+            self_segment = self_segment.next_segment
+            other_segment = other_segment.next_segment
         return self.identifier < other.identifier
 
 
