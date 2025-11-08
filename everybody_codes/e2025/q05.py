@@ -38,7 +38,7 @@ class Segment:
             self.next._construct(number)
 
     @property
-    def number(self) -> int:
+    def level(self) -> int:
         return int("".join(map(str, filter(None, (self.left, self.value, self.right)))))
 
     @property
@@ -67,9 +67,9 @@ class Sword:
         if self_segment.spine > other_segment.spine:
             return False
         while (self_segment is not None) or (other_segment is not None):
-            if self_segment.number < other_segment.number:
+            if self_segment.level < other_segment.level:
                 return True
-            if self_segment.number > other_segment.number:
+            if self_segment.number > other_segment.level:
                 return False
             self_segment, other_segment = self_segment.next, other_segment.next
         return self.identifier < other.identifier
