@@ -5,7 +5,7 @@ class Segment:
     value: int
     left: Optional[int] = None
     right: Optional[int] = None
-    next: Optional[Segment] = None
+    next_segment: Optional[Segment] = None
 
     def __init__(self, value: int) -> None:
         self.value = value
@@ -19,8 +19,8 @@ class Segment:
         buffer += f"{self.value}"
         if self.right is not None:
             buffer += f"-{self.right}"
-        if self.next is not None:
-            buffer += f"\n  |\n{self.next}"
+        if self.next_segment is not None:
+            buffer += f"\n  |\n{self.next_segment}"
         return buffer
 
     def construct(self, numbers: list[int]) -> None:
@@ -32,10 +32,10 @@ class Segment:
             self.left = number
         elif number > self.value and self.right is None:
             self.right = number
-        elif self.next is None:
-            self.next = Segment(number)
+        elif self.next_segment is None:
+            self.next_segment = Segment(number)
         else:
-            self.next._construct(number)
+            self.next_segment._construct(number)
 
     @property
     def level(self) -> int:
@@ -43,9 +43,9 @@ class Segment:
 
     @property
     def spine(self) -> int:
-        if self.next is None:
+        if self.next_segment is None:
             return self.value
-        return int(str(self.value) + str(self.next.spine))
+        return int(str(self.value) + str(self.next_segment.spine))
 
 
 class Sword:
@@ -67,7 +67,10 @@ class Sword:
         while (self_segment is not None) or (other_segment is not None):
             if self_segment.level != other_segment.level:
                 return self_segment.level < other_segment.level
-            self_segment, other_segment = self_segment.next, other_segment.next
+            self_segment, other_segment = (
+                self_segment.next_segment,
+                other_segment.next_segment,
+            )
         return self.identifier < other.identifier
 
 
