@@ -21,29 +21,35 @@ def p2(notes: str) -> int:
     return pairs
 
 
-# TODO: do this faster. you know how
+# TODO: do this prettier lmao
 def p3(notes: str) -> int:
     notes_len = len(notes)
-    pairs = 0
+    pairs = {"begin": 0, "middle": 0, "end": 0}
     mentors = {"A": 0, "B": 0, "C": 0}
     novices = {"a": 0, "b": 0, "c": 0}
 
-    def acc_pairs(k: int):
-        nonlocal pairs
-        _k = k % notes_len
-        for p, q in ("Aa", "Bb", "Cc"):
-            if notes[_k] == p:
-                mentors[p] += 1
-                pairs += novices[q]
-            elif notes[_k] == q:
-                novices[q] += 1
-                pairs += mentors[p]
+    def acc_pairs(j_: int, phase_: str):
+        _j_ = j_ % notes_len
+        for m_, n_ in ("Aa", "Bb", "Cc"):
+            if notes[_j_] == m_:
+                mentors[m_] += 1
+                pairs[phase_] += novices[n_]
+            elif notes[_j_] == n_:
+                novices[n_] += 1
+                pairs[phase_] += mentors[m_]
 
     for j in range(1001):
-        acc_pairs(j)
+        acc_pairs(j, "begin")
 
     i, j = 0, 1000
-    while j < 1000 * notes_len - 1:
+    while j < 3 * notes_len - 1:
+        if i < notes_len:
+            phase = "begin"
+        elif i < 2 * notes_len:
+            phase = "middle"
+        else:
+            phase = "end"
+
         _i = i % notes_len
         for m, n in ("Aa", "Bb", "Cc"):
             if notes[_i] == m:
@@ -52,8 +58,8 @@ def p3(notes: str) -> int:
                 novices[n] -= 1
         i += 1
         j += 1
-        acc_pairs(j)
-    return pairs
+        acc_pairs(j, phase)
+    return pairs["begin"] + 998 * pairs["middle"] + pairs["end"]
 
 
 if __name__ == "__main__":
