@@ -5,7 +5,7 @@ class Segment:
     value: int
     left: Optional[int] = None
     right: Optional[int] = None
-    next_segment: Optional[Segment] = None
+    next_segment: Optional["Segment"] = None
 
     def __init__(self, value: int) -> None:
         self.value = value
